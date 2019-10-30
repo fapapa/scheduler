@@ -9,6 +9,17 @@ export function getAppointmentsForDay(state, day) {
   }, []);
 }
 
+export function getInterviewersForDay(state, day) {
+  return state.days.reduce((interviewers, aDay) => {
+    if (aDay.name === day) {
+      aDay.interviewers.forEach((interviewer) => {
+        interviewers.push(state.interviewers[interviewer]);
+      });
+    }
+    return interviewers;
+  }, []);
+}
+
 export function getInterview(state, interview) {
   if (interview) {
     const id = interview.interviewer;
