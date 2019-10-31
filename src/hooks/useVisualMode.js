@@ -10,7 +10,7 @@ export default function useVisualMode(initial) {
     }
 
     setMode(newMode);
-    setHistory([...history, newMode])
+    setHistory(prev => [...history, newMode]);
   };
 
   const back = function () {
@@ -18,7 +18,7 @@ export default function useVisualMode(initial) {
       history.pop();
     }
 
-    setMode(history.slice(-1)[0]);
+    setMode(prev => history.slice(-1)[0]);
   };
 
   return { mode, transition, back };
