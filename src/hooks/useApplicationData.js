@@ -5,33 +5,32 @@ const SET_DAY = "setDay";
 const API_UPDATE = "apiUpdate";
 const UPDATE_APPOINTMENT = "updateAppointment";
 
+const stateActions = {
+  setDay: (state, day) => {
+    return {...state, ...day}
+  },
+  apiUpdate: (state, data) => {
+    return { ...state, ...data }
+  },
+  updateAppointment: (state, { id, interview }) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    return {...state, appointments}
+  }
+};
+
 export default function useApplicationData() {
   const [state, dispatch] = useReducer((state, action) => {
-    switch (action.function) {
-    case SET_DAY:
-      return {...state, day: action.day}
-    case API_UPDATE:
-      return {
-        ...state,
-        days: action.days,
-        appointments: action.appointments,
-        interviewers: action.interviewers
-      }
-    case UPDATE_APPOINTMENT:
-      const appointment = {
-        ...state.appointments[action.id],
-        interview: { ...action.interview }
-      };
-
-      const appointments = {
-        ...state.appointments,
-        [action.id]: appointment
-      };
-
-      return {...state, appointments}
-    default:
-      throw new Error();
-    }
+    const { functionName, ...params } = action;
+    return stateActions[functionName](state, params);
   }, {
     day: "Monday",
     days: [],
@@ -47,25 +46,25 @@ export default function useApplicationData() {
     ])
       .then(all => all.map(x => x.data))
       .then(([days, appointments, interviewers]) => {
-        dispatch({ function: API_UPDATE, days, appointments, interviewers });
+        dispatch({ functionName: API_UPDATE, days, appointments, interviewers });
       });
   }, []);
 
   function bookInterview(id, interview) {
     return axios.put(`/api/appointments/${id}`, {interview})
       .then(() => {
-        dispatch({function: UPDATE_APPOINTMENT, id, interview});
+        dispatch({functionName: UPDATE_APPOINTMENT, id, interview});
       });
   }
 
   function cancelInterview(id) {
     return axios.delete(`/api/appointments/${id}`)
       .then(() => {
-        dispatch({function: UPDATE_APPOINTMENT, id, interview: null});
+        dispatch({functionName: UPDATE_APPOINTMENT, id, interview: null});
       });
   }
 
-  const setDay = day => dispatch({function: SET_DAY, day});
+  const setDay = day => dispatch({functionName: SET_DAY, day});
 
   return { state, setDay, bookInterview, cancelInterview }
 }
