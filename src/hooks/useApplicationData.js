@@ -17,7 +17,7 @@ const stateActions = {
   updateAppointment: (state, { id, interview }) => {
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview }
+      interview: interview ? { ...interview } : null
     };
 
     const appointments = {
@@ -77,6 +77,21 @@ export default function useApplicationData() {
       .then(all => all.map(x => x.data))
       .then(([days, appointments, interviewers]) => {
         dispatch({ functionName: API_UPDATE, days, appointments, interviewers });
+      })
+      .then(() => {
+        const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+
+        ws.onmessage = (event) => {
+          const message = JSON.parse(event.data);
+
+          if (message.type === "SET_INTERVIEW") {
+            dispatch({
+              functionName: UPDATE_APPOINTMENT,
+              id: message.id,
+              interview: message.interview
+            });
+          }
+        }
       });
   }, []);
 
@@ -84,7 +99,7 @@ export default function useApplicationData() {
     return axios.put(`/api/appointments/${id}`, {interview})
       .then(() => {
         dispatch({functionName: UPDATE_APPOINTMENT, id, interview});
-        dispatch({functionName: DECREMENT_SPOTS, state, day: state.day});
+        dispatch({functionName: DECREMENT_SPOTS, day: state.day});
       });
   }
 
@@ -92,7 +107,7 @@ export default function useApplicationData() {
     return axios.delete(`/api/appointments/${id}`)
       .then(() => {
         dispatch({functionName: UPDATE_APPOINTMENT, id, interview: null});
-        dispatch({functionName: INCREMENT_SPOTS, state, day: state.day});
+        dispatch({functionName: INCREMENT_SPOTS, day: state.day});
       });
   }
 
