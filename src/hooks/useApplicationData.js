@@ -4,6 +4,8 @@ import axios from "axios";
 const SET_DAY = "setDay";
 const API_UPDATE = "apiUpdate";
 const UPDATE_APPOINTMENT = "updateAppointment";
+const DECREMENT_SPOTS = "decrementSpots";
+const INCREMENT_SPOTS = "incrementSpots";
 
 const stateActions = {
   setDay: (state, day) => {
@@ -23,7 +25,35 @@ const stateActions = {
       [id]: appointment
     };
 
-    return {...state, appointments}
+    return { ...state, appointments }
+  },
+  decrementSpots: (state, {day}) => {
+    const days = state.days.map(aDay => {
+      if (aDay.name !== day) {
+        return aDay
+      }
+
+      return {
+        ...aDay,
+        spots: aDay.spots - 1
+      }
+    });
+
+    return { ...state, days };
+  },
+  incrementSpots: (state, {day}) => {
+    const days = state.days.map(aDay => {
+      if (aDay.name !== day) {
+        return aDay
+      }
+
+      return {
+        ...aDay,
+        spots: aDay.spots + 1
+      }
+    });
+
+    return { ...state, days };
   }
 };
 
@@ -54,6 +84,7 @@ export default function useApplicationData() {
     return axios.put(`/api/appointments/${id}`, {interview})
       .then(() => {
         dispatch({functionName: UPDATE_APPOINTMENT, id, interview});
+        dispatch({functionName: DECREMENT_SPOTS, state, day: state.day});
       });
   }
 
@@ -61,6 +92,7 @@ export default function useApplicationData() {
     return axios.delete(`/api/appointments/${id}`)
       .then(() => {
         dispatch({functionName: UPDATE_APPOINTMENT, id, interview: null});
+        dispatch({functionName: INCREMENT_SPOTS, state, day: state.day});
       });
   }
 
