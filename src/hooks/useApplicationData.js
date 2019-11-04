@@ -101,7 +101,7 @@ export default function useApplicationData() {
           }
         };
       })
-      .catch(err => console.error("Error:", err));
+      .catch(err => {});
   }, []);
 
   function bookInterview(id, interview) {
