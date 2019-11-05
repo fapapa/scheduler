@@ -104,10 +104,12 @@ export default function useApplicationData() {
       .catch(err => {});
   }, []);
 
-  function bookInterview(id, interview) {
+  function bookInterview(id, interview, isExisting) {
     return axios.put(`/api/appointments/${id}`, { interview }).then(() => {
       dispatch({ functionName: UPDATE_APPOINTMENT, id, interview });
-      dispatch({ functionName: DECREMENT_SPOTS, day: state.day });
+      if (!isExisting) {
+        dispatch({ functionName: DECREMENT_SPOTS, day: state.day });
+      }
     });
   }
 

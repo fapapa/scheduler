@@ -36,14 +36,14 @@ export default function Appointment(props) {
     }
   }, [props.interview, mode, transition]);
 
-  function save(name, interviewer) {
+  function save(name, interviewer, isExisting) {
     const interview = {
       student: name,
       interviewer
     };
     transition(SAVE);
     props
-      .bookInterview(props.id, interview)
+      .bookInterview(props.id, interview, isExisting)
       .then(() => {
         transition(SHOW);
       })
