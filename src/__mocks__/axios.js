@@ -26,7 +26,13 @@ export default {
   get: jest.fn(url => {
     return getUrlLookup[url]();
   }),
-  put: jest.fn(url => {
+  put: jest.fn(() => {
+    return Promise.resolve({
+      status: 204,
+      statusText: "No Content"
+    });
+  }),
+  delete: jest.fn(() => {
     return Promise.resolve({
       status: 204,
       statusText: "No Content"

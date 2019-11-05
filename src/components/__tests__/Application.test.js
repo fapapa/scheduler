@@ -4,7 +4,8 @@ import {
   getAllByTestId,
   getByAltText,
   getByPlaceholderText,
-  queryByText
+  queryByText,
+  queryByAltText
 } from "@testing-library/react";
 
 import {
@@ -55,5 +56,31 @@ describe("Application", () => {
     );
 
     expect(getByText(day, /no spots remaining/i)).toBeInTheDocument();
+  });
+
+  it("loads data, cancels an interview and increases the spots remaining for Monday by 1", async () => {
+    const { container } = render(<Application />);
+    await waitForElement(() => getByText(container, "Archie Cohen"));
+
+    const appointments = getAllByTestId(container, "appointment");
+    const appointment = appointments.find(appt =>
+      queryByAltText(appt, /delete/i)
+    );
+    fireEvent.click(queryByAltText(appointment, /delete/i));
+
+    await waitForElement(() =>
+      getByText(appointment, /delete the appointment\?/i)
+    );
+    fireEvent.click(queryByText(appointment, /confirm/i));
+
+    expect(getByText(appointment, /deleting/i)).toBeInTheDocument();
+
+    await waitForElement(() => getByAltText(appointment, /add/i));
+
+    const day = getAllByTestId(container, "day").find(day =>
+      queryByText(day, "Monday")
+    );
+
+    expect(getByText(day, /2 spots remaining/i)).toBeInTheDocument();
   });
 });
