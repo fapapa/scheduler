@@ -1,4 +1,4 @@
-const urlLookup = {
+const getUrlLookup = {
   "/api/days": () => {
     return Promise.resolve({
       status: 200,
@@ -24,7 +24,13 @@ const urlLookup = {
 
 export default {
   get: jest.fn(url => {
-    return urlLookup[url]();
+    return getUrlLookup[url]();
+  }),
+  put: jest.fn(url => {
+    return Promise.resolve({
+      status: 204,
+      statusText: "No Content"
+    });
   })
 };
 
