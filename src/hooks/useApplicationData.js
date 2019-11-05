@@ -1,75 +1,21 @@
 import { useReducer, useEffect } from "react";
 import axios from "axios";
 
-const SET_DAY = "setDay";
-const API_UPDATE = "apiUpdate";
-const UPDATE_APPOINTMENT = "updateAppointment";
-const DECREMENT_SPOTS = "decrementSpots";
-const INCREMENT_SPOTS = "incrementSpots";
-
-const stateActions = {
-  setDay: (state, day) => {
-    return { ...state, ...day };
-  },
-  apiUpdate: (state, data) => {
-    return { ...state, ...data };
-  },
-  updateAppointment: (state, { id, interview }) => {
-    const appointment = {
-      ...state.appointments[id],
-      interview: interview ? { ...interview } : null
-    };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
-    return { ...state, appointments };
-  },
-  decrementSpots: (state, { day }) => {
-    const days = state.days.map(aDay => {
-      if (aDay.name !== day) {
-        return aDay;
-      }
-
-      return {
-        ...aDay,
-        spots: aDay.spots - 1
-      };
-    });
-
-    return { ...state, days };
-  },
-  incrementSpots: (state, { day }) => {
-    const days = state.days.map(aDay => {
-      if (aDay.name !== day) {
-        return aDay;
-      }
-
-      return {
-        ...aDay,
-        spots: aDay.spots + 1
-      };
-    });
-
-    return { ...state, days };
-  }
-};
+import reducer, {
+  SET_DAY,
+  API_UPDATE,
+  UPDATE_APPOINTMENT,
+  DECREMENT_SPOTS,
+  INCREMENT_SPOTS
+} from "reducers/application";
 
 export default function useApplicationData() {
-  const [state, dispatch] = useReducer(
-    (state, action) => {
-      const { functionName, ...params } = action;
-      return stateActions[functionName](state, params);
-    },
-    {
-      day: "Monday",
-      days: [],
-      appointments: {},
-      interviews: {}
-    }
-  );
+  const [state, dispatch] = useReducer(reducer, {
+    day: "Monday",
+    days: [],
+    appointments: {},
+    interviews: {}
+  });
 
   useEffect(() => {
     Promise.all([
