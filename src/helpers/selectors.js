@@ -1,7 +1,7 @@
 export function getAppointmentsForDay(state, day) {
   return state.days.reduce((appointments, aDay) => {
     if (aDay.name === day) {
-      aDay.appointments.forEach((appt) => {
+      aDay.appointments.forEach(appt => {
         appointments.push(state.appointments[appt]);
       });
     }
@@ -12,7 +12,7 @@ export function getAppointmentsForDay(state, day) {
 export function getInterviewersForDay(state, day) {
   return state.days.reduce((interviewers, aDay) => {
     if (aDay.name === day) {
-      aDay.interviewers.forEach((interviewer) => {
+      aDay.interviewers.forEach(interviewer => {
         interviewers.push(state.interviewers[interviewer]);
       });
     }
@@ -25,7 +25,7 @@ export function getInterview(state, interview) {
     const id = interview.interviewer;
     const student = interview.student;
 
-    return {student, interviewer: state.interviewers[id]};
+    return { student, interviewer: state.interviewers[id] };
   }
 
   return null;
