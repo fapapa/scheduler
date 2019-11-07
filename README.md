@@ -12,6 +12,13 @@ another user modifies the schedule.
 
 Install dependencies with `npm install`.
 
+### Additional dependencies
+
+Please note that, in addition to the NPM dependencies installed above, you also
+need to install and run the
+[scheduler-api](https://github.com/fapapa/scheduler-api) companion app that
+provides the API for this app to connect to for data.
+
 ## Running Webpack Development Server
 
 ```sh
