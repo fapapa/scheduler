@@ -19,6 +19,12 @@ need to install and run the
 [scheduler-api](https://github.com/fapapa/scheduler-api) companion app that
 provides the API for this app to connect to for data.
 
+## Screenshots
+
+!["The application"](/docs/full_app.png)
+!["Add a new interview"](/docs/new_interview.png)
+!["Confirmation before deleting an interview"](/docs/delete_confirm.png)
+
 ## Running Webpack Development Server
 
 ```sh
