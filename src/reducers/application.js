@@ -1,4 +1,7 @@
 const stateActions = {
+  setDay: (state, day) => {
+    return { ...state, ...day };
+  },
   apiUpdate: (state, data) => {
     return { ...state, ...data };
   },
